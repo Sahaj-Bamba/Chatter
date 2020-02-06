@@ -14,7 +14,10 @@ public class Chatter {
     /**
      * @param args the command line arguments
      */
+    
+    
     public static void main(String[] args) {
+        new Connect().setVisible(true);
         // TODO code application logic here
     }
     
