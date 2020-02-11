@@ -7,6 +7,9 @@
 package chatter;
 
 //import static chatbox.Chatbox.chatwindow;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -61,13 +64,55 @@ public class Listen implements Serializable,Runnable {
                 
                 System.out.println("Message received");
                 
+                if(!x.isFile){
+                  
                 //      What to do after message is received
                 System.out.println(this.name);
                 System.out.println(x.get_to());
                 if(x.get_to().equals(this.name)){
                     this.chatWindow.MessageReceived(x.get_from()+": "+x.get_txt());
                 }
-            } catch (IOException e) {
+                
+                }else{
+                    
+                    //  Handelling of file receive
+                
+                    if(x.get_to().equals(this.name)){
+                        File file = new File(x.get_txt());
+         
+                            FileOutputStream fos = null;
+
+                            try {
+
+                                fos = new FileOutputStream(file);
+
+                                // Writes bytes from the specified byte array to this file output stream 
+                                fos.write(x.by);
+      this.chatWindow.MessageReceived(x.get_from()+": "+x.get_txt());
+              
+                            }
+                            catch (FileNotFoundException e) {
+                                System.out.println("File not found" + e);
+                            }
+                            catch (IOException ioe) {
+                                System.out.println("Exception while writing file " + ioe);
+                            }
+                            finally {
+                                // close the streams using close method
+                                try {
+                                    if (fos != null) {
+                                        fos.close();
+                                    }
+                                }
+                                catch (IOException ioe) {
+                                    System.out.println("Error while closing stream: " + ioe);
+                                }
+ 
+                    }
+                
+                    
+                }
+            }} catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
